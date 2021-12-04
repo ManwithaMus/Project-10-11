@@ -1,0 +1,53 @@
+gcloud compute firewall-rules create http ^
+    --allow tcp:80 ^
+    --description="Allow HTTP from Anywhere" ^
+    --direction ingress ^
+    --target-tags="mhn-admin"
+
+gcloud compute firewall-rules create honeymap ^
+    --allow tcp:3000 ^
+    --description="Allow HoneyMap Feature from Anywhere" ^
+    --direction ingress ^
+    --target-tags="mhn-admin"
+
+gcloud compute firewall-rules create hpfeeds ^
+    --allow tcp:10000 ^
+    --description="Allow HPFeeds from Anywhere" ^
+    --direction ingress ^
+    --target-tags="mhn-admin"
+
+gcloud compute instances create "mhn-admin" ^
+    --machine-type "n1-standard-1" ^
+    --subnet "default" ^
+    --maintenance-policy "MIGRATE" ^
+    --tags "mhn-admin" ^
+    --image-family "ubuntu-minimal-1804-lts" ^
+    --image-project "ubuntu-os-cloud" ^
+    --boot-disk-size "10" ^
+    --boot-disk-type "pd-standard" ^
+    --boot-disk-device-name "mhn-admin"
+
+External IP:34.139.136.145
+
+gcloud compute firewall-rules create wideopen ^
+    --description="Allow TCP and UDP from Anywhere" ^
+    --direction ingress ^
+    --priority=1000 ^
+    --network=default ^
+    --action=allow ^
+    --rules=tcp,udp ^
+    --source-ranges=0.0.0.0/0 ^
+    --target-tags="honeypot"
+
+gcloud compute instances create "honeypot-1" ^
+    --machine-type "n1-standard-1" ^
+    --subnet "default" ^
+    --maintenance-policy "MIGRATE" ^
+    --tags "honeypot" ^
+    --image-family "ubuntu-minimal-1804-lts" ^
+    --image-project "ubuntu-os-cloud" ^
+    --boot-disk-size "10" ^
+    --boot-disk-type "pd-standard" ^
+    --boot-disk-device-name "honeypot-1"
+
+External IP:35.229.35.205
